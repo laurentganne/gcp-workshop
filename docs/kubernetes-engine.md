@@ -1,16 +1,18 @@
 # Kubernetes Engine
 
 [Kubernetes Engine](https://cloud.google.com/kubernetes-engine) allows to deploy a Kubernetes cluster in one command.
+
 Create a Kubernetes cluster with 3 worker nodes (default) :
 ```
 gcloud container clusters create k8s-cluster --cluster-version 1.10.2-gke.3 --num-nodes 3
 ```
 
 Reference: [gcloud container cluster create](https://cloud.google.com/sdk/gcloud/reference/container/clusters/create)
-The worker node are created automatically by Kubernetes Engine using another Google Service, Compute Engine,
+
+The worker nodes are created automatically by Kubernetes Engine using another Google Service, Compute Engine,
 and follows Google Compute Engine pricing policy until the node is deleted.
 
-These worker nodse can be seen using Compute Engine CLI:
+These worker nodes can be seen using Compute Engine CLI:
 ```
 gcloud compute instances list
 ```
@@ -70,7 +72,7 @@ spec:
 
 Creating a [Kubernetes job](https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/) (here a perl container with a command computing PI to 9 decimals), with in its specification, tolerations and nodeSelector to be scheduled on the node pool jobs-nodepool described above.
 
-Using file [scripts/jobPI.yml](scripts/jobPI.yml), reate the job:
+Using file [scripts/jobPI.yml](../scripts/jobPI.yml), create the job:
 ```
 kubectl create -f scripts/jobPI.yml
 ```
@@ -105,7 +107,7 @@ Events:
 ```
 
 
-Check pod status (--show-all allows to show completed jobs) :
+Check pod status (```--show-all``` allows to show completed jobs) :
 ```
 kubectl get pods --show-all
 NAME                   READY     STATUS      RESTARTS   AGE
@@ -119,13 +121,13 @@ kubectl logs pi-compute-job-c26ts
 3.141592654
 ```
 
-WARNING: With the autoscaling, after 10 minutes without any workload, the node that was created to execute our job will be automatically deleted, and the corresponding pod as well. So the pod logs displayed above are not accessible forever.
+WARNING: with the autoscaling, after 10 minutes without any workload, the node that was created to execute our job will be automatically deleted, and the corresponding pod as well. So the pod logs displayed above are not accessible forever.
 
 ## CronJob
 
 A [Kubernetes CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/) is a time-base job executed at a specified time, or periodically on a given schedule written in [Cron](https://en.wikipedia.org/wiki/Cron) format.
 
-Using file [scripts/cronJobDate.yml](scripts/cronJobDate.yml), using a busybox container image with a command printing the date, defining as a CronJob executed every 2 minutes, create the cron job :
+Using file [scripts/cronJobDate.yml](../scripts/cronJobDate.yml), using a busybox container image with a command printing the date, defining as a CronJob executed every 2 minutes, create the cron job :
 ```
 kubectl apply -f scripts/cronJobDate.yml
 ```
@@ -151,7 +153,13 @@ Mon May 28 15:34:05 UTC 2018
 
 Delete the job :
 ```
-kubectl delete -f cronJobDate.yml
+kubectl delete -f scripts/cronJobDate.yml
+```
+
+Delete the cluster
+
+```
+gcloud container clusters delete k8s-cluster
 ```
 
 ## Exposing applications to external traffic
