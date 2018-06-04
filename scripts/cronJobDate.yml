@@ -1,0 +1,28 @@
+# CronJob printing the date every 2 minutes
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: print-date-cronjob
+spec:
+  # schedule every 2 minutes
+  schedule: "*/2 * * * *"
+  # keep history of last 10 successful jobs (default 3)
+  successfulJobsHistoryLimit: 10
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: print-date
+            # container image
+            image: busybox
+            # container command
+            command: ['sh', '-c', 'date']
+          restartPolicy: OnFailure
+          tolerations:
+          - key: dedicated
+            operator: Equal
+            value: yorc
+            effect: NoSchedule
+          nodeSelector:
+            dedicated: yorc

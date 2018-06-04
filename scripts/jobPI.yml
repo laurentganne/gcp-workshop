@@ -1,0 +1,28 @@
+# Job computing PI to 9 decimals
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # Unique key of the Job instance
+  name: pi-compute-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        # Container image
+        image: perl
+        # Command to run
+        command: ["perl"]
+        # Command args
+        args: ["-Mbignum=bpi", "-wle", "print bpi(10)"]
+      # Do not restart containers after they exit
+      restartPolicy: Never
+      # Tolerate node pool tainting
+      tolerations:
+      - key: dedicated
+        operator: Equal
+        value: yorc
+        effect: NoSchedule
+        # Select a node with this label
+      nodeSelector:
+        dedicated: yorc
