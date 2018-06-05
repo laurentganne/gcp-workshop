@@ -58,7 +58,7 @@ gcloud compute instances start myinstance
 
 Check IP addresses have changed on restart (ephemeral IP addresses by default).
 
-# Static IP addresses 
+## Static IP addresses 
 
 To assign a non-ephemeral IP address to a VM, you can [reserve a static IP address](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#reserve_new_static) and create the compute instance using this IP address :
 
