@@ -96,7 +96,7 @@ Events:
  
   Type     Reason                 Age              From                                                  Message
   ----     ------                 ----             ----                                                  -------
-  Normal   TriggeredScaleUp       3m               cluster-autoscaler                                    pod triggered scale-up: [{https://content.googleapis.com/compute/v1/projects/rock-hangar-204817/zones/europe-west1-b/instanceGroups/gke-k8s-cluster-jobs-nodepool-5018659c-grp 0->1 (max: 3)}]
+  Normal   TriggeredScaleUp       3m               cluster-autoscaler                                    pod triggered scale-up: [{https://content.googleapis.com/compute/v1/projects/xxx/zones/europe-west1-b/instanceGroups/gke-k8s-cluster-jobs-nodepool-5018659c-grp 0->1 (max: 3)}]
   Warning  FailedScheduling       2m (x7 over 3m)  default-scheduler                                     0/1 nodes are available: 1 node(s) didn't match node selector.
   Normal   Scheduled              2m               default-scheduler                                     Successfully assigned pi-compute-job-xftvn to gke-k8s-cluster-jobs-nodepool-5018659c-8zlp
   Normal   SuccessfulMountVolume  2m               kubelet, gke-k8s-cluster-jobs-nodepool-5018659c-8zlp  MountVolume.SetUp succeeded for volume "default-token-9qwp7"
