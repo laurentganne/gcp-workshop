@@ -277,7 +277,6 @@ cat Online\ prediction\ example.ipynb > Untitled\ Notebook.ipynb
 ```
 
 like this :
-
 ![New Notebook](images/CloudDatalab2NewNoteBook.PNG)
 
 Click the ```Run``` command at the top of the page to download the ```Online prediction example.ipynb``` notebook and copy its contents into the current notebook :
@@ -305,4 +304,4 @@ You see just above text predictions, showing a 3 is predicted.
 
 The end of the page is also exposing predictions as a bar chart :
 
-![Bar chatr](images/CloudDatalab9Chart.PNG)
+![Bar chart](images/CloudDatalab9Chart.PNG)
