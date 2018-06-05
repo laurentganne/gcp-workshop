@@ -64,3 +64,5 @@ Check IP addresses have changed on restart (ephemeral IP addresses by default)
 gcloud compute instances delete myinstance
 ````
 
+Next: [Storage](storage.md)
+

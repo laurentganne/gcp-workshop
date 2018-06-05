@@ -6,4 +6,4 @@ Walking through Google Cloud Platform Infrastructure services to be used by [Yst
   * [Compute Engine](docs/compute-engine.md)
   * [Storage](docs/storage.md)
   * [Kubernetes Engine](docs/kubernetes-engine.md)
-  * Cloud Machine Learning
+  * [Cloud Machine Learning](docs/cloud-ml-engine.md)

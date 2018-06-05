@@ -171,19 +171,20 @@ In a cloud provider context, other ways of exposing services to external traffic
   * Service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer): Kubernetes Engine will automatically create a TCP load balancer and allocate an external IP address
   * Create a Kubernetes resource [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) describing rules and configuration for routing external traffic to internal service. This is the recommended way to expose HTTP(S) services. Kubernetes Engine will automatically create a HTTP load balancer, and configure health checks as well.
 
-Following the example described at https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer:
+Following the example described at https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer,
 
-Deploy a web application
+Deploy a web application:
 ```
 kubectl run web --image=gcr.io/google-samples/hello-app:1.0 --port=8081
 ```
 
 Expose your Deployment as a Service using the type ```NodePort```, that will reserve
 a port number on all nodes in the cluster, any traffic sent to this port on any node will be forwarded to the service.
-While
-  * ```targetPort``` is the port the container accepts traffic on
-  * ```port``` is the abstracted service port, which can be any port other pods use to access the Service
-```
+
+While,
+ * ```port``` used above is the abstracted service port, which can be any port other pods use to access the Service
+  * ```targetPort``` used below is the port the container accepts traffic on (can be a string)
+ ```
 kubectl expose deployment web --target-port=8080 --type=NodePort
 ```
 
@@ -265,4 +266,6 @@ Delete the cluster:
 ```
 gcloud container clusters delete k8s-cluster
 ```
+
+Next: [Cloud Machine Learning](cloud-ml-engine.md)
 
