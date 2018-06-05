@@ -80,7 +80,7 @@ kubectl create -f scripts/jobPI.yml
 Regularly check its state. Here the following command describes related events showing the job is scheduled on the autoscaling node pool containing no node initially.
 So a new node will be created on the fly (adding between 1 and 2 minutes of latency in job execution, the time to create this node) :
 ```
-kubectl describe pods
+$ kubectl describe pods
 Name:           pi-compute-job-xftvn
 Namespace:      default
 Node:           gke-k8s-cluster-jobs-nodepool-5018659c-8zlp/10.132.0.3
@@ -109,7 +109,7 @@ Events:
 
 Check pod status (```--show-all``` allows to show completed jobs) :
 ```
-kubectl get pods --show-all
+$ kubectl get pods --show-all
 NAME                   READY     STATUS      RESTARTS   AGE
 pi-compute-job-c26ts   0/1       Completed   0          3m
 ```
@@ -134,7 +134,7 @@ kubectl apply -f scripts/cronJobDate.yml
 
 After several minutes, check the job was executed on schedule, except for the first job, because we are executing this job on a node pool with an initial size of 0, so the first schedule will trigger the creation of a node in the pool):
 ```
-kubectl get pods --show-all
+$ kubectl get pods --show-all
 NAME                                  READY     STATUS      RESTARTS   AGE
 print-date-cronjob-1527521280-fzjkk   0/1       Completed   0          6m
 print-date-cronjob-1527521400-5xs46   0/1       Completed   0          4m
@@ -171,4 +171,98 @@ In a cloud provider context, other ways of exposing services to external traffic
   * Service of type [LoadBalancer](https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer): Kubernetes Engine will automatically create a TCP load balancer and allocate an external IP address
   * Create a Kubernetes resource [ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) describing rules and configuration for routing external traffic to internal service. This is the recommended way to expose HTTP(S) services. Kubernetes Engine will automatically create a HTTP load balancer, and configure health checks as well.
 
-See https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer for more details.
+Following the example described at https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer:
+
+Deploy a web application
+```
+kubectl run web --image=gcr.io/google-samples/hello-app:1.0 --port=8081
+```
+
+Expose your Deployment as a Service using the type ```NodePort```, that will reserve
+a port number on all nodes in the cluster, any traffic sent to this port on any node will be forwarded to the service.
+While
+  * ```targetPort``` is the port the container accepts traffic on
+  * ```port``` is the abstracted service port, which can be any port other pods use to access the Service
+```
+kubectl expose deployment web --target-port=8080 --type=NodePort
+```
+
+Check a service was created and a NodePort was allocated :
+```
+$ kubectl get service web
+NAME      TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+web       NodePort   10.63.241.162   <none>        8081:32331/TCP   48s
+```
+
+Using file [scripts/webapp-ingress.yml](../scripts/webapp-ingress.yml), create an ingress resource running :
+```
+kubectl apply -f scripts/webapp-ingress.yml
+```
+Check the resource created :
+```
+$ kubectl get ingress webapp-ingress
+NAME             HOSTS     ADDRESS         PORTS     AGE
+webapp-ingress   *         35.190.32.237   80        1m
+```
+
+The external IP address of the service is provided here. It will take some time for Kubernetes Engine to provision the load balancer and set forwarding rules. While it is not ready, an attempt to access this IP address at port 80 will return an HTTP error 404 or 500.
+
+In the meantime, here are some commands to check port and target port on a deployed application.
+Get the pod:
+```
+$ kubectl get pods
+NAME                   READY     STATUS    RESTARTS   AGE
+web-5786867cfc-qcl5x   1/1       Running   0          2m
+```
+
+Get a shell to the running Container and run a command to see the target port:
+```
+$ kubectl exec -it web-5786867cfc-qcl5x -- /bin/sh
+
+/ # netstat -an
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 :::8080                 :::*                    LISTEN
+```
+
+Exit form the shell and get pod details to find the port:
+```
+$ kubectl describe pod web-5786867cfc-qcl5x
+Name:           web-5786867cfc-qcl5x
+Namespace:      default
+Node:           gke-k8s-cluster-default-pool-cdd9e7b5-0h88/10.132.0.2
+Start Time:     Tue, 05 Jun 2018 10:32:15 +0200
+Labels:         pod-template-hash=1342423797
+                run=web
+Annotations:    kubernetes.io/limit-ranger=LimitRanger plugin set: cpu request for container web
+Status:         Running
+IP:             10.60.0.13
+Controlled By:  ReplicaSet/web-5786867cfc
+Containers:
+  web:
+    Container ID:   docker://8d9071782393bf383ff3ab6e924f2b228b43d0204dbd860a8069dcb7b6db777f
+    Image:          gcr.io/google-samples/hello-app:1.0
+    Image ID:       docker-pullable://gcr.io/google-samples/hello-app@sha256:c62ead5b8c15c231f9e786250b07909daf6c266d0fcddd93fea882eb722c3be4
+    Port:           8081/TCP
+    State:          Running
+      Started:      Tue, 05 Jun 2018 10:32:17 +0200
+    Ready:          True
+    Restart Count:  0
+    Requests:
+      cpu:        100m
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from default-token-ngzzc (ro)
+```
+
+## Cleanup
+
+Delete the load balancing resources:
+```
+kubectl delete ingress webapp-ingress
+```
+Delete the cluster:
+```
+gcloud container clusters delete k8s-cluster
+```
+
