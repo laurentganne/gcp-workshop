@@ -3,7 +3,7 @@
 Using a distributed configuration of TensorFlow code in Python on Cloud Machine Learning Engine to train a convolutional neural network model by using the MNIST dataset.
 
 In this section, we will use Google cloud shell, to use an environment with all dependencies already installed, as described at https://cloud.google.com/ml-engine/docs/tensorflow/getting-started-training-prediction
-Just open a cloud shell, and run this command to set your project ID :
+Just open a cloud shell from the [Google Cloud Platform Console](https://console.cloud.google.com), and run this command to set your project ID :
 ```
 gcloud config set project <project id>
 ```
