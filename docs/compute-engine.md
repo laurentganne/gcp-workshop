@@ -56,7 +56,42 @@ gcloud compute instances stop myinstance --async
 gcloud compute instances start myinstance
 ````
 
-Check IP addresses have changed on restart (ephemeral IP addresses by default)
+Check IP addresses have changed on restart (ephemeral IP addresses by default).
+
+# Static IP addresses 
+
+To assign a non-ephemeral IP address to a VM, you can [reserve a static IP address](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#reserve_new_static) and create the compute instance using this IP address :
+
+```
+$ gcloud compute addresses create my-address-1 --region europe-west1
+Created [https://www.googleapis.com/compute/v1/projects/rock-hangar-204817/regions/europe-west1/addresses/my-address-1].
+
+$ gcloud compute addresses list
+NAME          REGION        ADDRESS         STATUS
+my-address-1  europe-west1  35.189.192.238  RESERVED
+
+$ gcloud compute instances create myinstance2 \
+    --image-family centos-7 \
+    --image-project centos-cloud \
+    --machine-type n1-standard-1 \
+    --zone europe-west1-b \
+    --preemptible \
+    --address 35.189.192.238
+Created [https://www.googleapis.com/compute/v1/projects/xxx/zones/europe-west1-b/instances/myinstance2].
+NAME         ZONE            MACHINE_TYPE   PREEMPTIBLE  INTERNAL_IP  EXTERNAL_IP     STATUS
+myinstance2  europe-west1-b  n1-standard-1  true         10.132.0.2   35.189.192.238  RUNNING
+```
+
+Or you can change the IP address of the instance, see section ```Changing or assigning an external IP address to an existing instance``` of the [documentation](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address).
+
+Or you can [promote the ephemeral external IP address](https://cloud.google.com/compute/docs/ip-addresses/reserve-static-external-ip-address#promote_ephemeral_ip)
+ assigned to the instance, so that it becomes a static IP address, by just running :
+
+```
+$ gcloud compute addresses create my-address-1 \
+    --region europe-west1 \
+    --addresses <ephemeral IP address already assigned to your instance>
+```
 
 ## Delete a compute instance
 
