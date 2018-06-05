@@ -2,9 +2,14 @@
 
 Using a distributed configuration of TensorFlow code in Python on Cloud Machine Learning Engine to train a convolutional neural network model by using the MNIST dataset.
 
-Following this tutorial : https://cloud.google.com/ml-engine/docs/tensorflow/distributed-tensorflow-mnist-cloud-datalab
+In this section, we will use Google cloud shell, to use an environment with all dependencies already installed, as described at https://cloud.google.com/ml-engine/docs/tensorflow/getting-started-training-prediction
+Just open a cloud shell, and run this command to set your project ID :
+```
+gcloud config set project <project id>
+```
 
-First create a regional Cloud Storage bucket to hold the MNIST data files that are used to train the model.
+Following this tutorial : https://cloud.google.com/ml-engine/docs/tensorflow/distributed-tensorflow-mnist-cloud-datalab,
+first create a regional Cloud Storage bucket to hold the MNIST data files that are used to train the model.
 ```
 $ BUCKET="bds-bdcf-test2-ml"
 $ gsutil mb -c regional -l europe-west1 gs://${BUCKET}
