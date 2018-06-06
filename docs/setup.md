@@ -18,15 +18,12 @@ Google API client applications running outside of Google Cloud Platform, for exa
 
 API keys are generated from the API console at https://console.developers.google.com/.
 In the left-hand side menu, select Credentials :
-
 ![Credentials](images/gcloudCreds.PNG)
 
 Select Create Credentials and Service Account Key :
-
 ![Create credentials](images/gcloudCredsServiceAccount.PNG)
 
 Click on Create to download a JSON file containing API keys :
-
 ![Download JSON](images/gcloudCredsCreateJSON.PNG)
 
 References:
