@@ -27,17 +27,28 @@ See [documentation](https://cloud.google.com/compute/docs/gpus/add-gpus#create-n
 
 ## Manage ssh keys
 
-User-defined keys can be define in the Compute instance metadata.
-To define such keys, and assocate them to a compute instance, first create a file containing users and public keys values following this format: ```<user>:<key-value>```.
+User-defined keys can be defined:
+  * at the Project level,
+  * at the Compute instance level.
+
+To define such keys, first create a file containing users and public keys values following this format: ```<user>:<key-value>```.
 For example, with a public key ```./id_rsa.pub```, create a file containing two users ```user1``` and ```user2``` running :
 ```
 echo  "user1:`cat id_rsa.pub`" > userkeys.txt
 echo  "user2:`cat id_rsa.pub`" >> userkeys.txt
 ```
-You can then define these user and keys for your Compute Instance running:
+
+You can then define these user and keys at the project level, running:
+```
+gcloud compute project-info add-metadata --metadata-from-file ssh-keys=userkeys.txt
+```
+and they will be inherited by instances unless this is blocked for the instance, running ```gcloud compute instances add-metadata [INSTANCE_NAME] --metadata block-project-ssh-keys=TRUE```.
+
+Or you can define these user and keys at the Compute Instance level, running:
 ```
 gcloud compute instances add-metadata myinstance --metadata-from-file ssh-keys=userkeys.txt
 ```
+
 You can then ssh to your instance running:
 ```
 ssh -i ./id_rsa user1@<your instance external ip address>
