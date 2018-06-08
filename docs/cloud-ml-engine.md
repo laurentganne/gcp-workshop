@@ -264,7 +264,6 @@ Click on the *Web Preview* (square button at top-right), select *Change port > P
 ```
 
 Following the instructions above, we go tour our Datalab instance home page :
-
 ![Cloud Datalab](images/cloudDatalab.PNG)
 
 Create a new notebook by clicking on ```+Notebook```.
